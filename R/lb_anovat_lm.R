@@ -8,6 +8,8 @@
 #'
 #' @details This function is by Russell Steel for creating an ANOVA table for a full model linear regression.
 #' @return a data frame with class anova that shows the Df, SS, MS, F and P for the regression
+#'
+#' @importFrom stats lm df.residual pf
 #' @export
 #' @references See https://community.rstudio.com/t/overall-anova-table-in-r/97896 and
 #' https://community.rstudio.com/t/anova-table-for-full-linear-model/42074/3
