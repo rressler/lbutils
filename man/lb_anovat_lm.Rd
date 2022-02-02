@@ -23,7 +23,7 @@ Create a standard ANOVA table for linear regression
 This function is by Russell Steel for creating an ANOVA table for a full model linear regression.
 }
 \examples{
-#' lb_anovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = TRUE)
+lb_anovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = TRUE)
 lb_anovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = FALSE)
 }
 \references{
