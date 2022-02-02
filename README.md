@@ -6,14 +6,15 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of lbutils is to facilitate teaching statistics using R.
+The goal of {lbutils} is to facilitate teaching statistics using R.
 
 ## Installation
 
-You can install the development version of lbutils like so:
+You can install the development version of {lbutils} from GitHub using
+{devtools} like so:
 
 ``` r
-# Contact the creator Laura Bernhofen @ bernhofe@american.edu
+devtools::install_github("https://github.com/rressler/lbutils")
 ```
 
 ## Example
@@ -22,19 +23,22 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(lbutils)
-## basic example code
+lmout <- stats::lm(mpg ~ disp * cyl, data = mtcars)
+lb_anovat_lm(object = lmout)
+#> Analysis of Variance Table
+#> 
+#>        Df      SS      MS      F          P
+#> Source  3  927.95 309.315 43.719 1.0778e-10
+#> Error  28  198.10   7.075                  
+#> Total  31 1126.05  36.324
+
+lb_anovat_lm(object = lmout, reg_collapse = FALSE)
+#> Analysis of Variance Table
+#> 
+#>          Df      SS     MS        F        P
+#> disp      1  808.89 808.89 114.3299 0.000000
+#> cyl       1   46.42  46.42   6.5609 0.016099
+#> disp:cyl  1   72.64  72.64  10.2670 0.003369
+#> Error    28  198.10   7.08                  
+#> Total    31 1126.05  36.32
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
