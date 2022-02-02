@@ -1,3 +1,18 @@
+#' Create Custom ANOVA Table for Linear Regression
+#'
+#' @description This function creates a standard ANOVA table for linear regression
+#'
+#' @param object a Linear Regression object as returned from stats::lm()
+#' @param reg_collapse Logical variable to collapse the elements in the table. Set to FALSE to see each variable and interaction in the model.
+#' @param ... other potential arguments
+#'
+#' @details To be filled in
+#' @return a data frame with class anova that shows the Df, SS, MS, F and P for the regression
+#' @export
+#'
+#' @examples
+#' #' lb_amovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = TRUE)
+#' lb_amovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = FALSE)
 lb_anovat_lm <- function(object, reg_collapse = TRUE, ...) {
   if (length(list(object, ...)) > 1L) {
     return(anova.lmlist(object, ...))
