@@ -14,11 +14,11 @@
 #' @references See https://community.rstudio.com/t/overall-anova-table-in-r/97896 and
 #' https://community.rstudio.com/t/anova-table-for-full-linear-model/42074/3
 #' @examples
-#' #' lb_amovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = TRUE)
-#' lb_amovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = FALSE)
+#' #' lb_anovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = TRUE)
+#' lb_anovat_lm(object = lm(mpg ~ disp * cyl, data = mtcars), reg_collapse = FALSE)
 lb_anovat_lm <- function(object, reg_collapse = TRUE, ...) {
   if (length(list(object, ...)) > 1L) {
-    return(anova.lmlist(object, ...))
+    return(stats::anova.lmlist(object, ...))
   }
 
   # check if object inherits from class "lm"
