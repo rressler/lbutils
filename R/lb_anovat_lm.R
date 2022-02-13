@@ -50,7 +50,7 @@ lb_anovat_lm <- function(object, reg_collapse = TRUE, ...) {
         collapse_p <- 2:(length(ss) - 1)
         ss <- c(ss[1], sum(ss[collapse_p]), ss[length(ss)])
         df <- c(df[1], sum(df[collapse_p]), df[length(df)])
-        tlabels <- c(tlabels[1], "Source")
+        tlabels <- c(tlabels[1], "Regression") #replace Source
       } else {
         collapse_p <- 1:(length(ss) - 1)
         ss <- c(sum(ss[collapse_p]), ss[length(ss)])
@@ -67,11 +67,11 @@ lb_anovat_lm <- function(object, reg_collapse = TRUE, ...) {
       ss < -c(sum(ss[collapse_p]), ss[length(ss)])
       df <- c(df[1], sum(df[collapse_p]), df[length(df)])
     }
-  }
+  } # end of if (p > 0L)
 
   ms <- ss / df
   f <- ms / (ssr / dfr)
-  P <- pf(f, df, dfr, lower.tail = FALSE)
+  P <- pf(f, df, dfr, lower.tail = FALSE) # get the p value for F dist
   table <- data.frame(df, ss, ms, f, P)
   table <- rbind(table, colSums(table))
   if (attr(object$terms, "intercept")) {
