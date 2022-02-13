@@ -7,6 +7,7 @@
 #' @param ... other potential arguments
 #'
 #' @details This function is by Russell Steel for creating an ANOVA table for a full model linear regression.
+#'
 #' @return a data frame with class anova that shows the Df, SS, MS, F and P for the regression
 #'
 #' @importFrom stats lm df.residual pf
@@ -89,8 +90,12 @@ lb_anovat_lm <- function(object, reg_collapse = TRUE, ...) {
       (table$Df[nrow(table)]) / (table$Df[nrow(table)] - 1)
     table$Df[nrow(table)] <- table$Df[nrow(table)] - 1
   }
+
+  source <- data.frame("Source" = row.names(table))
+  row.names(table) <- NULL
+  table <- cbind(source, table)
   structure(table,
-    heading = c("Analysis of Variance Table\n"),
-    class = c("anova", "data.frame")
+    heading = c("Analysis of Variance Table\n")#, return as data.frame not anova
+    #class = c("anova", "data.frame")
   )
 }
