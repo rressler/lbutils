@@ -1,0 +1,77 @@
+whcB---
+title: "Working-Hotelling Bands for Simple LInear Regression"
+author: "Laura Bernhofen"
+date: "3/18/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#### Using the loess smoother to check linearity - see Sec 3.10 in the text *Applied Linear Regression Models*, 4th ed.
+
+1.  Create confidence bands for the model $E(Y) = \beta_0 + \beta_1 X$
+
+  * Note:  You can choose the confidence level by changing the value of "level = " in the first line of the code.  I'll use level = 0.95. 
+
+```{r whbands}
+#' Working-Hotelling bands for simple linear regression.
+#'
+#' Intervals of the form "fit +/- w * standard-error", where w^2 is 
+#' found by \code{p * qf(level, p, n - p)}.
+#'
+#' @param object An object of class "lm".
+#' @param newdata A data frame containing the new data.
+#' @param level The confidence level of the band.
+#'
+#' @author David Gerard
+whbands <- function(object, newdata, level = 0.95) {
+  stopifnot(inherits(object, "lm"))
+  stopifnot(inherits(newdata, "data.frame"))
+  stopifnot(is.numeric(level), length(level) == 1)
+  pout <- stats::predict(object = object, 
+                         newdata = newdata, 
+                         se.fit = TRUE, 
+                         interval = "none")
+  n <- nrow(stats::model.matrix(object))
+  p <- ncol(stats::model.matrix(object))
+  w <- sqrt(p * stats::qf(p = level, df1 = p, df2 = n - p))
+  lwr <- pout$fit - w * pout$se.fit
+  upr <- pout$fit + w * pout$se.fit
+  pout$fit <- cbind(fit = pout$fit, lwr = lwr, upr = upr)
+  return(pout)
+}
+```
+
+
+Apply the **whbands(object, newdata)** function which we defined in the code chunk above to our model to get the 95% confidence bands for $E(Y)$ and add the smoothing function loess to our plot
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r conf-bands-loess,  fig.dim=c(5,3)}
+rmr <- read_csv("rmr.csv")
+mrout <- lm(metabolic.rate ~ body.weight, data = rmr)
+newdf <- data.frame(body.weight = seq(from = min(rmr$body.weight),
+                                      to = max(rmr$body.weight), length.out = 100))
+
+
+whfit <- whbands(object = mrout, newdata = newdf) 
+whfit$fit %>%
+  cbind(newdf) -> 
+  newdf
+
+ggplot() +
+  geom_point(data = rmr, mapping = aes(x = body.weight, y = metabolic.rate)) +
+  geom_smooth(data = rmr, mapping = aes(x = body.weight, y = metabolic.rate), method = 'lm', se = FALSE) +
+  geom_line(data = newdf, mapping = aes(x = body.weight, y = lwr)) +
+  geom_line(data = newdf, mapping = aes(x = body.weight, y = upr)) +
+  geom_smooth(data = rmr, mapping = aes(x = body.weight, y = metabolic.rate), method = 'loess', color = "orange", se = FALSE)
+
+```
+
+* Linear Model does a good job of fitting our data if the loess (locally weighted regression scatter plot smoothing)  remains within the confidence bands of $E(Y)$
