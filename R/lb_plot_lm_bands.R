@@ -36,8 +36,26 @@ lb_plot_lm_bands <- function(df, x, y, band_type = "whbands", level = .95){
                                        " confidence bands with level = ",
                                        level),
                   x = x, y = y)
+}
 
+lb_plot_lm_bandsf <- function(formula, data, band_type = "whbands", level = .95){
+  lmout <- stats::lm(formula , data = data)
+  band_df <- lb_create_lm_bandsf(formula, data, band_type, level)
+  lm_df <- lmout$model
 
-
-
+  ggplot2::ggplot(lm_df, ggplot2::aes(x = lm_df[[2]], y = lm_df[[1]])) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = lm, formula =  y ~ x, se = FALSE) +
+    ggplot2::geom_line(data = band_df, ggplot2::aes(x = band_df[[4]], y = .data$lwr)) +
+    ggplot2::geom_line(data = band_df, ggplot2::aes(x = band_df[[4]], y = .data$upr)) +
+    ggplot2::geom_smooth(data = lm_df, ggplot2::aes(x = lm_df[[2]], y = lm_df[[1]]),
+                         method = "loess", formula =  y ~ x,
+                         color = "orange",
+                         se = FALSE) +
+    ggplot2::labs(title = paste0("Linear Model of ", substitute(data),
+                                 " variables: ", deparse(formula)),
+                  subtitle = paste0(band_type,
+                                    " confidence bands with level = ",
+                                    level),
+                  x = names(lm_df)[2], y = names(lm_df)[1])
 }

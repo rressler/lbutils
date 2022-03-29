@@ -37,3 +37,25 @@ lb_create_lm_bands <- function(df, x, y, band_type = "whbands", level = .95) {
   }
   new_df
 }
+
+########
+
+lb_create_lm_bandsf <- function(formula, data, band_type = "whbands", level = .95) {
+  lmout <- stats::lm(formula , data = data)
+  lm_df <- lmout$model
+  new_df <- data.frame("dfx" = seq(
+    from = min(lm_df[[2]]),
+    to = max(lm_df[[2]]),
+    length.out = 100
+  ))
+   names(new_df) <- names(lm_df)[[2]]
+  if (band_type == "whbands") {
+    whfit <- lb_whbands(object = lmout, new_data = new_df, level)
+    whfit$fit  |>
+      cbind(new_df) ->
+      new_df
+  } else {
+    stop("Unsupported type of confidence bands.")
+  }
+  new_df
+}

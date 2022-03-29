@@ -29,3 +29,21 @@ lb_whbands <- function(object, new_data, level = 0.95) {
   pout$fit <- cbind(fit = pout$fit, lwr = lwr, upr = upr)
   return(pout)
 }
+
+
+lb_whbands2 <- function(object, new_data, level = 0.95) {
+  stopifnot(inherits(object, "lm"))
+  stopifnot(inherits(new_data, "data.frame"))
+  stopifnot(is.numeric(level), length(level) == 1)
+  pout <- stats::predict(object = object,
+                         newdata = new_data,
+                         se.fit = TRUE,
+                         interval = "none")
+  n <- nrow(stats::model.matrix(object))
+  p <- ncol(stats::model.matrix(object))
+  w <- sqrt(p * stats::qf(p = level, df1 = p, df2 = n - p))
+  lwr <- pout$fit - w * pout$se.fit
+  upr <- pout$fit + w * pout$se.fit
+  pout$fit <- cbind(fit = pout$fit, lwr = lwr, upr = upr)
+  return(pout)
+}
