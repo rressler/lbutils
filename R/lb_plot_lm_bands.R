@@ -57,6 +57,8 @@ lb_plot_lm_bands <- function(df, x, y, band_type = "whbands", level = .95) {
 #' @param band_type A character value for the type of confidence band.
 #' Includes "whbands".
 #' @param level a number between 0 and 1 for the confidence level of the bands
+#' @param smoother any of the accepted methods for the ggplot2::geom_smooth()
+#'        should be in quotes unless the desired option is NULL
 #' @importFrom rlang .data .env
 #'
 #' @return a ggplot2 object with the points, the fitted line,
@@ -66,14 +68,16 @@ lb_plot_lm_bands <- function(df, x, y, band_type = "whbands", level = .95) {
 #' @examples
 #' lb_plot_lm_bandsf(mpg ~ wt, data = mtcars)
 lb_plot_lm_bandsf <- function(formula, data,
-                              band_type = "whbands", level = .95) {
+                              band_type = "whbands", level = .95,
+                              smoother = "None") {
   stopifnot(is.data.frame(data), all.vars(formula) %in% names(data))
   lmout <- stats::lm(formula, data = data)
   band_df <- lb_create_lm_bandsf(formula, data, band_type, level)
   lm_df <- lmout$model
 
-  ggplot2::ggplot(lm_df, ggplot2::aes(x = .data[[all.vars(formula)[2]]],
-                                      y = .data[[all.vars(formula)[1]]])) +
+  my_plot <- ggplot2::ggplot(lm_df,
+                             ggplot2::aes(x = .data[[all.vars(formula)[2]]],
+                                          y = .data[[all.vars(formula)[1]]])) +
     ggplot2::geom_point() +
     ggplot2::geom_smooth(method = lm,
                          formula =  y ~ x,
@@ -84,13 +88,22 @@ lb_plot_lm_bandsf <- function(formula, data,
     ggplot2::geom_line(data = band_df,
                        ggplot2::aes(x = .data[[names(band_df)[4]]],
                                     y = .data$upr)) +
-    ggplot2::geom_smooth(method = "loess",
-                         color = "orange",
-                         se = FALSE,
-                         formula =  y ~ x) +
     ggplot2::labs(title = paste0("Linear Model of ", substitute(data),
                                  " variables: ", deparse(formula)),
                   subtitle = paste0(band_type,
                                     " confidence bands with level = ",
                                     level))
+  if (is.null(smoother)) {
+    my_plot <-  my_plot +
+      ggplot2::geom_smooth(color = "orange",
+                           se = FALSE,
+                           formula =  y ~ x)
+  } else if (smoother != "None") {
+    my_plot <-  my_plot +
+      ggplot2::geom_smooth(method = smoother,
+                           color = "orange",
+                           se = FALSE,
+                           formula =  y ~ x)
+  }
+  my_plot
 }

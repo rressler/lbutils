@@ -4,7 +4,13 @@
 \alias{lb_plot_lm_bandsf}
 \title{Plot linear model fitted values with confidence bands based on a formula}
 \usage{
-lb_plot_lm_bandsf(formula, data, band_type = "whbands", level = 0.95)
+lb_plot_lm_bandsf(
+  formula,
+  data,
+  band_type = "whbands",
+  level = 0.95,
+  smoother = "None"
+)
 }
 \arguments{
 \item{formula}{a formula object to be fit by a linear model}
@@ -15,6 +21,9 @@ lb_plot_lm_bandsf(formula, data, band_type = "whbands", level = 0.95)
 Includes "whbands".}
 
 \item{level}{a number between 0 and 1 for the confidence level of the bands}
+
+\item{smoother}{any of the accepted methods for the ggplot2::geom_smooth()
+should be in quotes unless the desired option is NULL}
 }
 \value{
 a ggplot2 object with the points, the fitted line,
