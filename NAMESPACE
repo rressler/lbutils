@@ -2,7 +2,9 @@
 
 export(lb_anovat_lm)
 export(lb_create_lm_bands)
+export(lb_create_lm_bandsf)
 export(lb_plot_lm_bands)
+export(lb_plot_lm_bandsf)
 export(lb_whbands)
 importFrom(rlang,.data)
 importFrom(rlang,.env)
