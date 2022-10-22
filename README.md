@@ -14,7 +14,7 @@ You can install the development version of {lbutils} from GitHub using
 {devtools} like so:
 
 ``` r
-devtools::install_github("https://github.com/rressler/lbutils")
+remotes::install_github("rressler/lbutils", build_vignettes = TRUE)
 ```
 
 ## Example
@@ -25,20 +25,16 @@ This is a basic example which shows you how to solve a common problem:
 library(lbutils)
 lmout <- stats::lm(mpg ~ disp * cyl, data = mtcars)
 lb_anovat_lm(object = lmout)
-#> Analysis of Variance Table
-#> 
-#>        Df      SS      MS      F          P
-#> Source  3  927.95 309.315 43.719 1.0778e-10
-#> Error  28  198.10   7.075                  
-#> Total  31 1126.05  36.324
+#>       Source Df        SS         MS        F            P
+#> 1 Regression  3  927.9461 309.315374 43.71925 1.077824e-10
+#> 2      Error 28  198.1011   7.075038       NA           NA
+#> 3      Total 31 1126.0472  36.324103       NA           NA
 
 lb_anovat_lm(object = lmout, reg_collapse = FALSE)
-#> Analysis of Variance Table
-#> 
-#>          Df      SS     MS        F        P
-#> disp      1  808.89 808.89 114.3299 0.000000
-#> cyl       1   46.42  46.42   6.5609 0.016099
-#> disp:cyl  1   72.64  72.64  10.2670 0.003369
-#> Error    28  198.10   7.08                  
-#> Total    31 1126.05  36.32
+#>     Source Df         SS         MS         F            P
+#> 1     disp  1  808.88850 808.888498 114.32991 2.150986e-11
+#> 2      cyl  1   46.41841  46.418407   6.56087 1.609895e-02
+#> 3 disp:cyl  1   72.63922  72.639216  10.26697 3.369023e-03
+#> 4    Error 28  198.10107   7.075038        NA           NA
+#> 5    Total 31 1126.04719  36.324103        NA           NA
 ```
