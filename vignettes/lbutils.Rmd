@@ -1,0 +1,31 @@
+---
+title: "lbutils"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{lbutils}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(lbutils)
+```
+
+The goal of {lbutils} is to facilitate teaching statistics using R.
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(lbutils)
+lmout <- stats::lm(mpg ~ disp * cyl, data = mtcars)
+lb_anovat_lm(object = lmout)
+
+lb_anovat_lm(object = lmout, reg_collapse = FALSE)
+```
